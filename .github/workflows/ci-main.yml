@@ -31,7 +31,7 @@ jobs:
         uses: papeloto/action-zip@v1
         with:
           files: target/dgc-cli.jar src/wrapper/dgc.bat
-          recursive: false
+          recursive: true
           dest: dgc-cli.zip
       - name: Publish to Release
         uses: djnicholson/release-action@v2.11
