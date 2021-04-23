@@ -22,7 +22,7 @@
 
 You need to have a JRE (minimum version 11) installed on your system. Also the java executable should be available in your PATH variable.
 
-1. Download latest build from [Releases](https://github.com/eu-digital-green-certificates/dgc-gateway/releases)
+1. Download latest build from [Releases](https://github.com/eu-digital-green-certificates/dgc-cli/releases/tag/latest)
 2. Extract ZIP-File to a path of your choice
 3. Add the Path to your PATH variable
 4. Check your installation
