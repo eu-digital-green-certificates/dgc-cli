@@ -35,11 +35,11 @@ You need to have a JRE (minimum version 11) installed on your system. Also the j
 The DGC-CLI provides a toolchain for manually interacting with DGC Components.
 This list gives an overview of the possibilities. For detailed information use the built-in help.
 
-* Signing
-  ** Envelope a Certificate in signed CMS message (for DGC Gateway upload)
-  ** Verify enveloped certificate in signed CMS message
+* Signing 
+  * Envelope a Certificate in signed CMS message (for DGC Gateway upload)
+  * Verify enveloped certificate in signed CMS message
 * TrustAnchor
-  ** Sign a certificate with a TrustAnchor for usage in DGC Gateway
+  * Sign a certificate with a TrustAnchor for usage in DGC Gateway
 
 ## Development
 
