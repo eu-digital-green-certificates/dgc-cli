@@ -30,7 +30,7 @@ jobs:
           recursive: true
           dest: dgc-cli.zip
       - name: Create new latest release
-        uses: ncipollo/release-action
+        uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
           artifact: dgc-cli.zip
