@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>eu.europa.ec.dgc.cli</groupId>
+    <artifactId>dgc-cli</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <name>dgc-cli</name>
+    <description>Command Line Tool for European Digital Green Certificate project.</description>
+    <organization>
+        <name>T-Systems International GmbH</name>
+    </organization>
+
+    <repositories>
+        <repository>
+            <id>dgc-github</id>
+            <url>https://maven.pkg.github.com/${github.organization}/*</url>
+        </repository>
+    </repositories>
+
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.plugin-version>3.8.1</maven.compiler.plugin-version>
+        <dgclib.version>1.0.0-SNAPSHOT</dgclib.version>
+        <plugin.checkstyle.version>3.1.2</plugin.checkstyle.version>
+        <plugin.license.version>2.0.0</plugin.license.version>
+        <!-- license -->
+        <license.projectName>EU Digital Green Certificate Gateway Service / dgc-cli</license.projectName>
+        <license.inceptionYear>2021</license.inceptionYear>
+        <license.licenseName>apache_v2</license.licenseName>
+        <!-- github -->
+        <github.organization>eu-digital-green-certificates</github.organization>
+        <github.project>dgc-cli</github.project>
+    </properties>
+
+    <url>https://github.com/eu-digital-green-certificates/dgc-cli</url>
+    <ciManagement>
+        <url>https://github.com/eu-digital-green-certificates/dgc-cli/actions?query=workflow%3Aci</url>
+    </ciManagement>
+    <issueManagement>
+        <url>https://github.com/eu-digital-green-certificates/dgc-cli/issues</url>
+    </issueManagement>
+    <scm>
+        <url>https://github.com/eu-digital-green-certificates/dgc-cli</url>
+    </scm>
+
+    <dependencies>
+        <dependency>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli</artifactId>
+            <version>4.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>eu.europa.ec.dgc</groupId>
+            <artifactId>dgc-lib</artifactId>
+            <version>${dgclib.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${plugin.checkstyle.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>license-maven-plugin</artifactId>
+                    <version>${plugin.license.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin-version}</version>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>info.picocli</groupId>
+                            <artifactId>picocli-codegen</artifactId>
+                            <version>4.6.1</version>
+                        </path>
+                    </annotationProcessorPaths>
+                    <compilerArgs>
+                        <arg>-Aproject=${project.groupId}/${project.artifactId}</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <configLocation>codestyle/checkstyle.xml</configLocation>
+                    <excludes>target/**/*</excludes>
+                    <encoding>UTF-8</encoding>
+                    <consoleOutput>true</consoleOutput>
+                    <failsOnError>true</failsOnError>
+                    <violationSeverity>warning</violationSeverity>
+                    <failOnViolation>true</failOnViolation>
+                    <linkXRef>false</linkXRef>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <dgc-lib-version>${dgclib.version}</dgc-lib-version>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>dgc-cli</finalName>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>eu.europa.ec.dgc.cli.Main</mainClass>
+                                </transformer>
+                            </transformers>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <configuration>
+                    <includes>**/*.java</includes>
+                    <copyrightOwners>${project.organization.name} and all other contributors</copyrightOwners>
+                    <processStartTag>---license-start</processStartTag>
+                    <processEndTag>---license-end</processEndTag>
+                    <sectionDelimiter>---</sectionDelimiter>
+                    <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+                    <trimHeaderLine>true</trimHeaderLine>
+                    <emptyLineAfterHeader>true</emptyLineAfterHeader>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
