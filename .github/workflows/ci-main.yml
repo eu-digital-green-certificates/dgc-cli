@@ -29,14 +29,11 @@ jobs:
           files: target/dgc-cli.jar src/wrapper/dgc.bat
           recursive: true
           dest: dgc-cli.zip
-      - name: Create new latest release
-        uses: ncipollo/release-action@v1
+      - name: Create Release
+        uses: marvinpinto/action-automatic-releases@latest
         with:
-          allowUpdates: true
-          artifact: dgc-cli.zip
-          body: Automatic Build of latest code in main branch.
-          draft: true
-          name: Development Build (autmatic)
-          commit: main
-          tag: automatic-build
-          token: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: latest
+          prerelease: true
+          title: Development Build
+          files: dgc-cli.zip
