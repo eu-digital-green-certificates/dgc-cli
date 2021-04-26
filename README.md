@@ -10,13 +10,21 @@
 
 <p align="center">
   <a href="#installation">Installation</a> •
-  <a href="#documentation">Documentation</a> •
   <a href="#development">Development</a> •
   <a href="#support-and-feedback">Support</a> •
   <a href="#how-to-contribute">Contribute</a> •
   <a href="#contributors">Contributors</a> •
   <a href="#licensing">Licensing</a>
 </p>
+
+The DGC-CLI provides a toolchain for manually interacting with DGC Components.
+This list gives an overview of the possibilities. For detailed information use the built-in help.
+
+* Signing 
+  * Envelope a Certificate in signed CMS message (for DGC Gateway upload)
+  * Verify enveloped certificate in signed CMS message
+* TrustAnchor
+  * Sign a certificate with a TrustAnchor for usage in DGC Gateway
 
 ## Installation
 
@@ -29,17 +37,6 @@ You need to have a JRE (minimum version 11) installed on your system. Also the j
    ```
    dgc --version
    ```
-
-## Documentation
-
-The DGC-CLI provides a toolchain for manually interacting with DGC Components.
-This list gives an overview of the possibilities. For detailed information use the built-in help.
-
-* Signing 
-  * Envelope a Certificate in signed CMS message (for DGC Gateway upload)
-  * Verify enveloped certificate in signed CMS message
-* TrustAnchor
-  * Sign a certificate with a TrustAnchor for usage in DGC Gateway
 
 ## Development
 
@@ -63,9 +60,9 @@ The following channels are available for discussions, feedback, and support requ
 
 | Type                     | Channel                                                |
 | ------------------------ | ------------------------------------------------------ |
-| **Gateway issues**    | <a href="/../../issues" title="Open Issues"><img src="https://img.shields.io/github/issues/eu-digital-green-certificates/dgc-gateway?style=flat"></a>  |
+| **Gateway issues**    | <a href="https://github.com/eu-digital-green-certificates/dgc-gateway/issues" title="Open Issues"><img src="https://img.shields.io/github/issues/eu-digital-green-certificates/dgc-gateway?style=flat"></a>  |
 | **CLI issues**    | <a href="/../../issues" title="Open Issues"><img src="https://img.shields.io/github/issues/eu-digital-green-certificates/dgc-cli?style=flat"></a>  |
-| **DGC Lib issues**    | <a href="/../../issues" title="Open Issues"><img src="https://img.shields.io/github/issues/eu-digital-green-certificates/dgc-lib?style=flat"></a>  |
+| **DGC Lib issues**    | <a href="https://github.com/eu-digital-green-certificates/dgc-lib/issues" title="Open Issues"><img src="https://img.shields.io/github/issues/eu-digital-green-certificates/dgc-lib?style=flat"></a>  |
 | **Other requests**    | <a href="mailto:opensource@telekom.de" title="Email DGC Team"><img src="https://img.shields.io/badge/email-DGC%20team-green?logo=mail.ru&style=flat-square&logoColor=white"></a>   |
 
 ## How to contribute  
