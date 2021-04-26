@@ -1,6 +1,6 @@
 /*-
  * ---license-start
- * eu-digital-green-certificates / dgc-gateway
+ * eu-digital-green-certificates / dgc-cli
  * ---
  * Copyright (C) 2021 T-Systems International GmbH and all other contributors
  * ---
