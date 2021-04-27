@@ -4,7 +4,7 @@ on:
     - cron: '48 02 * * 0' # Each Sunday at 02:48 UTC
   push:
     branches:
-      - master
+      - main
   workflow_dispatch:
 
 jobs:
@@ -16,5 +16,11 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
+          server-id: 'dgc-github'
+          server-username: GITHUB_USER
+          server-password: GITHUB_PAT
       - name: Execute Dependency Check
         run: mvn --batch-mode dependency-check:check
+        env:
+          GITHUB_USER: ${{ secrets.GPR_USER }}
+          GITHUB_PAT: ${{ secrets.GPR_PAT }}
