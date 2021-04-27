@@ -3,12 +3,14 @@
 </h1>
 
 <p align="center">
+    <a href="https://github.com/eu-digital-green-certificates/dgc-cli/actions/workflows/ci-main.yml" title="ci-main.yml"><img src="https://github.com/eu-digital-green-certificates/dgc-cli/actions/workflows/ci-main.yml/badge.svg"></a>
     <a href="/../../commits/" title="Last Commit"><img src="https://img.shields.io/github/last-commit/eu-digital-green-certificates/dgc-cli?style=flat"></a>
     <a href="/../../issues" title="Open Issues"><img src="https://img.shields.io/github/issues/eu-digital-green-certificates/dgc-cli?style=flat"></a>
     <a href="./LICENSE" title="License"><img src="https://img.shields.io/badge/License-Apache%202.0-green.svg?style=flat"></a>
 </p>
 
 <p align="center">
+  <a href="#about">About</a> •
   <a href="#installation">Installation</a> •
   <a href="#development">Development</a> •
   <a href="#support-and-feedback">Support</a> •
@@ -16,6 +18,8 @@
   <a href="#contributors">Contributors</a> •
   <a href="#licensing">Licensing</a>
 </p>
+
+## About
 
 The DGC-CLI provides a toolchain for manually interacting with DGC Components.
 This list gives an overview of the possibilities. For detailed information use the built-in help.
