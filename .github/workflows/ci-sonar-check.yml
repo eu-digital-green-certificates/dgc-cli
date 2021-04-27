@@ -22,8 +22,13 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
+          server-id: 'dgc-github'
+          server-username: GITHUB_USER
+          server-password: GITHUB_PAT
       - name: Sonar Check
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_USER: ${{ secrets.GPR_USER }}
+          GITHUB_PAT: ${{ secrets.GPR_PAT }}

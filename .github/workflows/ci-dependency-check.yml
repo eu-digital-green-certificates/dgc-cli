@@ -16,5 +16,11 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
+          server-id: 'dgc-github'
+          server-username: GITHUB_USER
+          server-password: GITHUB_PAT
       - name: Execute Dependency Check
         run: mvn --batch-mode dependency-check:check
+        env:
+          GITHUB_USER: ${{ secrets.GPR_USER }}
+          GITHUB_PAT: ${{ secrets.GPR_PAT }}
