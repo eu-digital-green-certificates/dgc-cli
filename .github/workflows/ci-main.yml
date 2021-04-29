@@ -1,4 +1,4 @@
-name: CI Main Branch
+name: ci-main
 on:
   workflow_dispatch:
   push:
@@ -6,34 +6,51 @@ on:
       - main
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
       - uses: actions/setup-java@v2
         with:
           java-version: '11'
           distribution: 'adopt'
-          server-id: 'dgc-github'
-          server-username: GITHUB_USER
-          server-password: GITHUB_PAT
-      - name: Build
-        run: mvn --batch-mode package
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.m2/repository
+          key: ${{ runner.os }}-${{ hashFiles('**/pom.xml') }}
+      - name: version
+        run: >-
+          APP_SHA=$(git rev-parse --short ${GITHUB_SHA});
+          APP_REV=$(git rev-list --tags --max-count=1);
+          APP_TAG=$(git describe --tags ${APP_REV} 2> /dev/null || echo 0.0.0);
+          APP_VERSION=${APP_TAG}-${APP_SHA};
+          echo "APP_SHA=${APP_SHA}" >> ${GITHUB_ENV};
+          echo "APP_TAG=${APP_TAG}" >> ${GITHUB_ENV};
+          echo "APP_VERSION=${APP_VERSION}" >> ${GITHUB_ENV};
+      - name: mvn
+        run: >-
+          mvn versions:set
+          --batch-mode
+          --file ./pom.xml
+          --settings ./settings.xml
+          --define newVersion="${APP_VERSION}";
+          mvn clean package
+          --batch-mode
+          --file ./pom.xml
+          --settings ./settings.xml
+          --define app.packages.username="${APP_PACKAGES_USERNAME}"
+          --define app.packages.password="${APP_PACKAGES_PASSWORD}";
         env:
-          GITHUB_USER: ${{ secrets.GPR_USER }}
-          GITHUB_PAT: ${{ secrets.GPR_PAT }}
+          APP_PACKAGES_USERNAME: ${{ github.actor }}
+          APP_PACKAGES_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
       - name: Build ZIP
-        uses: papeloto/action-zip@v1
-        with:
-          files: target/dgc-cli.jar src/wrapper/dgc.bat
-          recursive: true
-          dest: dgc-cli.zip
-      - name: Create Release
-        uses: marvinpinto/action-automatic-releases@latest
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          automatic_release_tag: latest
-          prerelease: true
-          title: Development Build
-          files: dgc-cli.zip
+        run: zip -j dgc-cli.zip target/dgc-cli.jar src/wrapper/dgc.bat
+      - name: create-snapshot-release
+        run: |
+          gh release delete snapshot -y || true
+          git tag -d snapshot || true
+          git tag snapshot HEAD
+          git push origin :refs/tags/snapshot
+          gh release create snapshot -p -t 'Snapshot Release ${APP_VERSION}' 'dgc-cli.zip'
