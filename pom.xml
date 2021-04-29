@@ -28,6 +28,7 @@
         <dgclib.version>1.0.0-SNAPSHOT</dgclib.version>
         <plugin.checkstyle.version>3.1.2</plugin.checkstyle.version>
         <plugin.license.version>2.0.0</plugin.license.version>
+        <owasp.version>6.1.1</owasp.version>
         <!-- license -->
         <license.projectName>EU Digital Green Certificate Gateway Service / dgc-cli</license.projectName>
         <license.inceptionYear>2021</license.inceptionYear>
@@ -81,6 +82,15 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>${owasp.version}</version>
+                <configuration>
+                    <suppressionFile>./owasp/suppressions.xml</suppressionFile>
+                    <failBuildOnAnyVulnerability>true</failBuildOnAnyVulnerability>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
