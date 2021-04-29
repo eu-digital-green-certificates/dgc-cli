@@ -51,6 +51,9 @@ jobs:
         run: |
           gh release delete snapshot -y || true
           git tag -d snapshot || true
+          git push origin :refs/tags/snapshot || true
           git tag snapshot HEAD
-          git push origin :refs/tags/snapshot
+          git push origin refs/tags/snapshot
           gh release create snapshot -p -t 'Snapshot Release ${APP_VERSION}' 'dgc-cli.zip'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

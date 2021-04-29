@@ -47,3 +47,5 @@ jobs:
       run: zip -j dgc-cli.zip target/dgc-cli.jar src/wrapper/dgc.bat
     - name: upload-to-release
       run: gh release upload ${APP_TAG} dgc-cli.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
