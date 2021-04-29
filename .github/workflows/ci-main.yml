@@ -31,11 +31,6 @@ jobs:
           echo "APP_VERSION=${APP_VERSION}" >> ${GITHUB_ENV};
       - name: mvn
         run: >-
-          mvn versions:set
-          --batch-mode
-          --file ./pom.xml
-          --settings ./settings.xml
-          --define newVersion="${APP_VERSION}";
           mvn clean package
           --batch-mode
           --file ./pom.xml
@@ -45,17 +40,3 @@ jobs:
         env:
           APP_PACKAGES_USERNAME: ${{ github.actor }}
           APP_PACKAGES_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build ZIP
-        run: zip -j dgc-cli.zip target/dgc-cli.jar src/wrapper/dgc.bat
-      - name: create-snapshot-release
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          gh release delete snapshot -y || true
-          git tag -d snapshot || true
-          git push origin :refs/tags/snapshot || true
-          git tag -a snapshot -m "current snapshot"
-          git push origin refs/tags/snapshot
-          gh release create snapshot -p -t 'Snapshot Release' 'dgc-cli.zip'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
