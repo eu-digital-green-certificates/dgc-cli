@@ -3,6 +3,7 @@
 </h1>
 
 <p align="center">
+    <a href="https://sonarcloud.io/dashboard?id=eu-digital-green-certificates_dgc-cli" title="Quality Gate Status"><img src="https://sonarcloud.io/api/project_badges/measure?project=eu-digital-green-certificates_dgc-cli&metric=alert_status"></a>
     <a href="https://github.com/eu-digital-green-certificates/dgc-cli/actions/workflows/ci-main.yml" title="ci-main.yml"><img src="https://github.com/eu-digital-green-certificates/dgc-cli/actions/workflows/ci-main.yml/badge.svg"></a>
     <a href="/../../commits/" title="Last Commit"><img src="https://img.shields.io/github/last-commit/eu-digital-green-certificates/dgc-cli?style=flat"></a>
     <a href="/../../issues" title="Open Issues"><img src="https://img.shields.io/github/issues/eu-digital-green-certificates/dgc-cli?style=flat"></a>
@@ -34,7 +35,7 @@ This list gives an overview of the possibilities. For detailed information use t
 
 You need to have a JRE (minimum version 11) installed on your system. Also the java executable should be available in your PATH variable.
 
-1. Download latest build from [Releases](https://github.com/eu-digital-green-certificates/dgc-cli/releases/tag/latest)
+1. Download latest build from [Releases](https://github.com/eu-digital-green-certificates/dgc-cli/releases/latest)
 2. Extract ZIP-File to a path of your choice
 3. Add the Path to your PATH variable
 4. Check your installation
