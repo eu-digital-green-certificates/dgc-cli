@@ -49,6 +49,27 @@ Whether you cloned or downloaded the 'zipped' sources you will either find the s
 
 In either case open a terminal pointing to the directory you put the sources in. The local build process is described afterwards depending on the way you choose.
 
+### Prerequisites
+
+- OpenJDK 11 (with installed ```keytool``` CLI)
+- Maven
+- Authenticate to [Github Packages](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry)
+
+#### Authenticating to GitHub Packages
+
+As some of the required libraries (and/or versions are pinned/available only from GitHub Packages) You need to authenticate
+to [GitHub Packages](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry)
+The following steps need to be followed
+
+- Create [PAT](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with scopes:
+  - `read:packages` for downloading packages
+  - `write:packages` for uploading packages (NOTE: Requires write permission for the repo of the package)
+  - `delete:packages` for deleting packages (NOTE: Requires admin permission for the repo of the package)
+  - `repo` pload and delete packages (along with `write:packages`, or `delete:packages`)
+- Copy/Augment `~/.m2/settings.xml` with the contents of `settings.xml` present in this repository
+  - Replace `${app.packages.username}` with your github username
+  - Replace `${app.packages.password}` with the generated PAT
+
 ### Maven based build
 
 Building this project is done with maven.
