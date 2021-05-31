@@ -1,5 +1,5 @@
 <h1 align="center">
-    EU Digital Green Certificates CLI
+ EU Digital COVID Certificate CLI
 </h1>
 
 <p align="center">
