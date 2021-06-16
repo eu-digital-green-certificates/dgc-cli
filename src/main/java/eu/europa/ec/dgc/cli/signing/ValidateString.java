@@ -21,18 +21,18 @@
 package eu.europa.ec.dgc.cli.signing;
 
 import eu.europa.ec.dgc.signing.SignedCertificateMessageParser;
+import eu.europa.ec.dgc.signing.SignedStringMessageParser;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.concurrent.Callable;
 import picocli.CommandLine;
 
 @CommandLine.Command(
-    name = "validate",
+    name = "validate-string",
     mixinStandardHelpOptions = true,
-    description = "Validates a signature of a CMS signed message. This just validates the"
-        + " integrity of the message itself. The certificate will not be checked."
+    description = "Validates a signature of a CMS signed message containing a String."
 )
-public class Validate implements Callable<Integer> {
+public class ValidateString implements Callable<Integer> {
 
     @CommandLine.Option(
         names = {"--input", "-i"},
@@ -45,7 +45,7 @@ public class Validate implements Callable<Integer> {
     public Integer call() throws Exception {
 
         byte[] bytes = Files.readAllBytes(inputFile.toPath());
-        SignedCertificateMessageParser parser = new SignedCertificateMessageParser(bytes);
+        SignedStringMessageParser parser = new SignedStringMessageParser(bytes);
 
         if (parser.getParserState() != SignedCertificateMessageParser.ParserState.SUCCESS) {
             System.out.println("Failed to validate message: " + parser.getParserState().toString());
@@ -57,7 +57,7 @@ public class Validate implements Callable<Integer> {
             }
 
             System.out.println("Signer Cert: " + parser.getSigningCertificate().getSubject().toString());
-            System.out.println("Payload Cert: " + parser.getPayloadCertificate().getSubject().toString());
+            System.out.println("String: " + parser.getPayload());
         }
 
         return 0;
