@@ -85,7 +85,7 @@ public class Sign implements Callable<Integer> {
 
         String trustAnchorSignature = new SignedCertificateMessageBuilder()
             .withSigningCertificate(new X509CertificateHolder(signingCert.getEncoded()), signingCertPrivateKey)
-            .withPayloadCertificate(inputCertHolder)
+            .withPayload(inputCertHolder)
             .buildAsString(true);
 
         System.out.println();

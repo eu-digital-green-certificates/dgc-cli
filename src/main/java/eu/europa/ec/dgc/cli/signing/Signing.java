@@ -26,8 +26,10 @@ import picocli.CommandLine;
     name = "signing",
     mixinStandardHelpOptions = true,
     subcommands = {
-        Sign.class,
-        Validate.class
+        SignCert.class,
+        SignString.class,
+        ValidateCert.class,
+        ValidateString.class
     }
 )
 public class Signing {
