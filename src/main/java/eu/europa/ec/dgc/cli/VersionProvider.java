@@ -2,7 +2,7 @@
  * ---license-start
  * EU Digital Green Certificate Gateway Service / dgc-cli
  * ---
- * Copyright (C) 2021 T-Systems International GmbH and all other contributors
+ * Copyright (C) 2021 - 2022 T-Systems International GmbH and all other contributors
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ public class VersionProvider implements CommandLine.IVersionProvider {
 
         properties.load(inputStream);
 
-        return new String[] {
+        return new String[]{
             "DGC CLI Version: " + properties.getProperty(dgcCliVersionProperty, "unknown version"),
             "Based on DGC LIB Version:" + properties.getProperty(dgcLibVersionProperty, "unknown version")
         };

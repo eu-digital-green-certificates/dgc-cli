@@ -2,7 +2,7 @@
  * ---license-start
  * EU Digital Green Certificate Gateway Service / dgc-cli
  * ---
- * Copyright (C) 2021 T-Systems International GmbH and all other contributors
+ * Copyright (C) 2021 - 2022 T-Systems International GmbH and all other contributors
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,22 +26,12 @@ import static eu.europa.ec.dgc.cli.utils.CliUtils.readKeyFromFile;
 import eu.europa.ec.dgc.signing.SignedCertificateMessageBuilder;
 import eu.europa.ec.dgc.utils.CertificateUtils;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.security.PrivateKey;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
 import java.util.concurrent.Callable;
-import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.asn1.x509.X509ObjectIdentifiers;
 import org.bouncycastle.cert.X509CertificateHolder;
-import org.bouncycastle.openssl.PEMParser;
-import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import picocli.CommandLine;
 
 @CommandLine.Command(
