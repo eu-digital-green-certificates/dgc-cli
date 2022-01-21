@@ -2,7 +2,7 @@
  * ---license-start
  * EU Digital Green Certificate Gateway Service / dgc-cli
  * ---
- * Copyright (C) 2021 T-Systems International GmbH and all other contributors
+ * Copyright (C) 2021 - 2022 T-Systems International GmbH and all other contributors
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +23,8 @@ package eu.europa.ec.dgc.cli.signing;
 import static eu.europa.ec.dgc.cli.utils.CliUtils.readCertFromFile;
 import static eu.europa.ec.dgc.cli.utils.CliUtils.readKeyFromFile;
 
-import eu.europa.ec.dgc.signing.SignedCertificateMessageBuilder;
 import eu.europa.ec.dgc.signing.SignedStringMessageBuilder;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;

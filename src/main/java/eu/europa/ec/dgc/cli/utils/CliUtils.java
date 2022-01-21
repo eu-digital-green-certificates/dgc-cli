@@ -2,7 +2,7 @@
  * ---license-start
  * EU Digital Green Certificate Gateway Service / dgc-cli
  * ---
- * Copyright (C) 2021 T-Systems International GmbH and all other contributors
+ * Copyright (C) 2021 - 2022 T-Systems International GmbH and all other contributors
  * ---
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,9 +27,9 @@ import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.jcajce.provider.asymmetric.x509.CertificateFactory;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 
@@ -57,14 +57,14 @@ public class CliUtils {
      *
      * @param inputFile the file to read from.
      * @return Read Certificate
-     * @throws IOException if reading failed.
+     * @throws IOException          if reading failed.
      * @throws CertificateException if certificate parsing failed.
      */
     public static X509Certificate readCertFromFile(File inputFile) throws IOException, CertificateException {
-        CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+        CertificateFactory certificateFactory = new CertificateFactory();
 
         FileInputStream fileInputStream = new FileInputStream(inputFile);
-        Certificate inputCert = certificateFactory.generateCertificate(fileInputStream);
+        Certificate inputCert = certificateFactory.engineGenerateCertificate(fileInputStream);
         fileInputStream.close();
 
         if (inputCert instanceof X509Certificate) {
