@@ -40,7 +40,7 @@ public class VersionProvider implements CommandLine.IVersionProvider {
 
         return new String[]{
             "DGC CLI Version: " + properties.getProperty(dgcCliVersionProperty, "unknown version"),
-            "Based on DGC LIB Version:" + properties.getProperty(dgcLibVersionProperty, "unknown version")
+            "Based on DGC LIB Version: " + properties.getProperty(dgcLibVersionProperty, "unknown version")
         };
     }
 }
