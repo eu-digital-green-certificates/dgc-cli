@@ -85,9 +85,11 @@ public class ValidateCert implements Callable<Integer> {
 
         byte[] payload = null;
         if (inputPayload.file != null) {
-            payload = Base64.getEncoder().encode(new X509CertificateHolder(Files.readAllBytes(inputPayload.file.toPath())).getEncoded());
+            payload = Base64.getEncoder().encode(
+                new X509CertificateHolder(Files.readAllBytes(inputPayload.file.toPath())).getEncoded());
         } else if (inputPayload.string != null) {
-            payload = Base64.getEncoder().encode(new X509CertificateHolder(Base64.getDecoder().decode(input.string)).getEncoded());
+            payload = Base64.getEncoder().encode(
+                new X509CertificateHolder(Base64.getDecoder().decode(input.string)).getEncoded());
         }
 
         SignedCertificateMessageParser parser;
