@@ -23,7 +23,9 @@ package eu.europa.ec.dgc.cli.signing;
 import eu.europa.ec.dgc.signing.SignedCertificateMessageParser;
 import eu.europa.ec.dgc.signing.SignedStringMessageParser;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Base64;
 import java.util.concurrent.Callable;
 import picocli.CommandLine;
 
@@ -34,18 +36,73 @@ import picocli.CommandLine;
 )
 public class ValidateString implements Callable<Integer> {
 
-    @CommandLine.Option(
-        names = {"--input", "-i"},
-        description = "Input File with message to validate",
-        required = true
-    )
-    private File inputFile;
+    @CommandLine.ArgGroup(multiplicity = "1")
+    Input input;
+
+    static class Input {
+        @CommandLine.Option(
+            names = {"--inputString", "-s"},
+            description = "Input String you want to validate.",
+            required = true
+        )
+        String string;
+
+        @CommandLine.Option(
+            names = {"--inputFile", "-i"},
+            description = "Input File with the String you want to verify.",
+            required = true
+        )
+        File file;
+    }
+
+    @CommandLine.ArgGroup
+    InputPayload inputPayload;
+
+    static class InputPayload {
+        @CommandLine.Option(
+            names = {"--inputPayloadString", "-ps"},
+            description = "Input String with payload to validate detached signature."
+        )
+        String string;
+
+        @CommandLine.Option(
+            names = {"--inputPayloadStringBase64", "-ps64"},
+            description = "Base64 encoded input String with payload to validate detached signature."
+        )
+        String stringBase64;
+
+        @CommandLine.Option(
+            names = {"--inputPayloadFile", "-p"},
+            description = "Input File with Base64 encoded payload to validate detached signature."
+        )
+        File file;
+    }
 
     @Override
     public Integer call() throws Exception {
 
-        byte[] bytes = Files.readAllBytes(inputFile.toPath());
-        SignedStringMessageParser parser = new SignedStringMessageParser(bytes);
+        String cms;
+        if (input.file != null) {
+            cms = Files.readString(input.file.toPath());
+        } else {
+            cms = input.string;
+        }
+
+        String payload = null;
+        if (inputPayload != null && inputPayload.file != null) {
+            payload = Files.readString(inputPayload.file.toPath());
+        } else if (inputPayload != null && inputPayload.stringBase64 != null) {
+            payload = inputPayload.string;
+        } else if (inputPayload != null && inputPayload.string != null) {
+            payload = Base64.getEncoder().encodeToString(inputPayload.string.getBytes(StandardCharsets.UTF_8));
+        }
+
+        SignedStringMessageParser parser;
+        if (payload == null) {
+            parser = new SignedStringMessageParser(cms);
+        } else {
+            parser = new SignedStringMessageParser(cms, payload);
+        }
 
         if (parser.getParserState() != SignedCertificateMessageParser.ParserState.SUCCESS) {
             System.out.println("Failed to validate message: " + parser.getParserState().toString());

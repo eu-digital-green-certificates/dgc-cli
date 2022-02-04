@@ -67,6 +67,14 @@ public class SignCert implements Callable<Integer> {
     )
     private File outputFile;
 
+    @CommandLine.Option(
+        names = {"--detached", "-d"},
+        description = "Output only the signature without encapsulated payload.",
+        defaultValue = "false",
+        showDefaultValue = CommandLine.Help.Visibility.ALWAYS
+    )
+    private Boolean detached;
+
     @Override
     public Integer call() throws Exception {
 
@@ -78,7 +86,7 @@ public class SignCert implements Callable<Integer> {
         String signedMessaged = new SignedCertificateMessageBuilder()
             .withSigningCertificate(new X509CertificateHolder(signingCert.getEncoded()), signingCertPrivateKey)
             .withPayload(new X509CertificateHolder(inputCert.getEncoded()))
-            .buildAsString();
+            .buildAsString(detached);
 
         FileWriter fileWriter = new FileWriter(outputFile, false);
         fileWriter.write(signedMessaged);

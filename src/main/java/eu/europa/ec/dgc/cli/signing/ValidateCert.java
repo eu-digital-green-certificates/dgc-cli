@@ -23,7 +23,9 @@ package eu.europa.ec.dgc.cli.signing;
 import eu.europa.ec.dgc.signing.SignedCertificateMessageParser;
 import java.io.File;
 import java.nio.file.Files;
+import java.util.Base64;
 import java.util.concurrent.Callable;
+import org.bouncycastle.cert.X509CertificateHolder;
 import picocli.CommandLine;
 
 @CommandLine.Command(
@@ -34,18 +36,66 @@ import picocli.CommandLine;
 )
 public class ValidateCert implements Callable<Integer> {
 
-    @CommandLine.Option(
-        names = {"--input", "-i"},
-        description = "Input File with message to validate",
-        required = true
-    )
-    private File inputFile;
+    @CommandLine.ArgGroup(multiplicity = "1")
+    Input input;
+
+    static class Input {
+        @CommandLine.Option(
+            names = {"--inputString", "-s"},
+            description = "Input String you want to validate.",
+            required = true
+        )
+        String string;
+
+        @CommandLine.Option(
+            names = {"--inputFile", "-i"},
+            description = "Input File with the String you want to verify.",
+            required = true
+        )
+        File file;
+    }
+
+    @CommandLine.ArgGroup
+    InputPayload inputPayload;
+
+    static class InputPayload {
+        @CommandLine.Option(
+            names = {"--inputPayloadString", "-ps"},
+            description = "Base64 encoded input String with payload to validate detached signature."
+        )
+        String string;
+
+        @CommandLine.Option(
+            names = {"--inputPayloadFile", "-p"},
+            description = "Input File with certificate to validate detached signature."
+        )
+        File file;
+    }
 
     @Override
     public Integer call() throws Exception {
 
-        byte[] bytes = Files.readAllBytes(inputFile.toPath());
-        SignedCertificateMessageParser parser = new SignedCertificateMessageParser(bytes);
+
+        String cms;
+        if (input.file != null) {
+            cms = Files.readString(input.file.toPath());
+        } else {
+            cms = input.string;
+        }
+
+        byte[] payload = null;
+        if (inputPayload.file != null) {
+            payload = Base64.getEncoder().encode(new X509CertificateHolder(Files.readAllBytes(inputPayload.file.toPath())).getEncoded());
+        } else if (inputPayload.string != null) {
+            payload = Base64.getEncoder().encode(new X509CertificateHolder(Base64.getDecoder().decode(input.string)).getEncoded());
+        }
+
+        SignedCertificateMessageParser parser;
+        if (payload == null) {
+            parser = new SignedCertificateMessageParser(cms);
+        } else {
+            parser = new SignedCertificateMessageParser(cms, payload);
+        }
 
         if (parser.getParserState() != SignedCertificateMessageParser.ParserState.SUCCESS) {
             System.out.println("Failed to validate message: " + parser.getParserState().toString());

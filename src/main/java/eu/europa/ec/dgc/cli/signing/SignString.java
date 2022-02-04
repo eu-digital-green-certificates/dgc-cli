@@ -41,12 +41,24 @@ import picocli.CommandLine;
 )
 public class SignString implements Callable<Integer> {
 
-    @CommandLine.Option(
-        names = {"--inputString", "-i"},
-        description = "Input File with the String you want to sign.",
-        required = true
-    )
-    private File inputFile;
+    @CommandLine.ArgGroup(multiplicity = "1")
+    Input input;
+
+    static class Input {
+        @CommandLine.Option(
+            names = {"--inputString", "-s"},
+            description = "Input String you want to sign.",
+            required = true
+        )
+        String string;
+
+        @CommandLine.Option(
+            names = {"--inputFile", "-i"},
+            description = "Input File with the String you want to sign.",
+            required = true
+        )
+        File file;
+    }
 
     @CommandLine.Option(
         names = {"--cert", "-c"},
@@ -64,27 +76,49 @@ public class SignString implements Callable<Integer> {
 
     @CommandLine.Option(
         names = {"--outputFile", "-o"},
-        description = "The file where to write the signed certificate to.",
-        required = true
+        description = "The file where to write the signed string to. "
+            + "(If not provided the output will be written to console"
     )
-    private File outputFile;
+    File outputFile;
+
+    @CommandLine.Option(
+        names = {"--detached", "-d"},
+        description = "Output only the signature without encapsulated payload.",
+        defaultValue = "false",
+        showDefaultValue = CommandLine.Help.Visibility.ALWAYS
+    )
+    private Boolean detached;
 
     @Override
     public Integer call() throws Exception {
 
-        String input = FileUtils.readFileToString(inputFile, StandardCharsets.UTF_8);
+        String inputString = null;
+
+        if (input.file != null) {
+            FileUtils.readFileToString(input.file, StandardCharsets.UTF_8);
+        } else if (input.string != null) {
+            inputString = input.string;
+        }
+
         X509Certificate signingCert = readCertFromFile(signingCertFile);
         PrivateKey signingCertPrivateKey = readKeyFromFile(signingKeyFile);
 
         String signedMessaged = new SignedStringMessageBuilder()
             .withSigningCertificate(new X509CertificateHolder(signingCert.getEncoded()), signingCertPrivateKey)
-            .withPayload(input)
-            .buildAsString();
+            .withPayload(inputString)
+            .buildAsString(detached);
 
-        FileWriter fileWriter = new FileWriter(outputFile, false);
-        fileWriter.write(signedMessaged);
-        fileWriter.close();
+        if (outputFile != null) {
+            FileWriter fileWriter = new FileWriter(outputFile, false);
+            fileWriter.write(signedMessaged);
+            fileWriter.close();
 
+            System.out.println("Successfully written to file.");
+        } else {
+            System.out.println("CMS: " + signedMessaged);
+        }
+
+        System.out.println("");
         System.out.println("Success");
 
         return 0;
