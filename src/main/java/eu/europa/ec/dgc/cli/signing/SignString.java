@@ -95,7 +95,7 @@ public class SignString implements Callable<Integer> {
         String inputString = null;
 
         if (input.file != null) {
-            FileUtils.readFileToString(input.file, StandardCharsets.UTF_8);
+            inputString = FileUtils.readFileToString(input.file, StandardCharsets.UTF_8);
         } else if (input.string != null) {
             inputString = input.string;
         }
