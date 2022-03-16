@@ -63,14 +63,15 @@ public class CliUtils {
     public static X509Certificate readCertFromFile(File inputFile) throws IOException, CertificateException {
         CertificateFactory certificateFactory = new CertificateFactory();
 
-        FileInputStream fileInputStream = new FileInputStream(inputFile);
-        Certificate inputCert = certificateFactory.engineGenerateCertificate(fileInputStream);
-        fileInputStream.close();
+        try (FileInputStream fileInputStream = new FileInputStream(inputFile)) {
+            Certificate inputCert = certificateFactory.engineGenerateCertificate(fileInputStream);
+            fileInputStream.close();
 
-        if (inputCert instanceof X509Certificate) {
-            return (X509Certificate) inputCert;
-        } else {
-            throw new CertificateException("Given Certificate does not contain a X.509 Certificate");
+            if (inputCert instanceof X509Certificate) {
+                return (X509Certificate) inputCert;
+            } else {
+                throw new CertificateException("Given Certificate does not contain a X.509 Certificate");
+            }
         }
     }
 }
