@@ -26,8 +26,10 @@ The DGC-CLI provides a toolchain for manually interacting with DGC Components.
 This list gives an overview of the possibilities. For detailed information use the built-in help.
 
 * Signing 
-  * Envelope a Certificate in signed CMS message (for DGC Gateway upload)
-  * Verify enveloped certificate in signed CMS message
+  * Envelope a Certificate in signed CMS message (e.g. for Upload of DSC to DGC Gateway)
+  * Envelope a String in signed CMS message (e.g. for Upload of Validation-Rules to DGC Gateway)
+  * Envelope a File in signed CMS message
+  * Verify enveloped certificate, string or file in signed CMS message
 * TrustAnchor
   * Sign a certificate with a TrustAnchor for usage in DGC Gateway
 
