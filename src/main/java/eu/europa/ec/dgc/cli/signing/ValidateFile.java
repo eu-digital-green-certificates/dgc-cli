@@ -20,19 +20,24 @@
 
 package eu.europa.ec.dgc.cli.signing;
 
+import static eu.europa.ec.dgc.cli.utils.CliUtils.readCertFromFile;
+
 import eu.europa.ec.dgc.signing.SignedByteArrayMessageParser;
+import eu.europa.ec.dgc.utils.CertificateUtils;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Base64;
 import java.util.concurrent.Callable;
+import org.bouncycastle.cert.X509CertificateHolder;
 import picocli.CommandLine;
 
 @CommandLine.Command(
     name = "validate-file",
     mixinStandardHelpOptions = true,
     description = "Validates a signature of a CMS signed message. This just validates the"
-        + " integrity of the message itself. The certificate will not be checked."
+        + " integrity of the message itself. The certificate will not be checked. Checking of signing certificate"
+        + " can be enabled with -c option."
 )
 public class ValidateFile implements Callable<Integer> {
 
@@ -72,6 +77,13 @@ public class ValidateFile implements Callable<Integer> {
         File file;
     }
 
+    @CommandLine.Option(
+            names = {"--cert", "-c"},
+            description = "Certificate which should be checked against the signature.",
+            required = false
+    )
+    private File signingCertFile;
+
     @Override
     public Integer call() throws Exception {
 
@@ -105,8 +117,21 @@ public class ValidateFile implements Callable<Integer> {
                 System.out.println("Result: Invalid CMS");
             }
 
-            System.out.println("Signer Cert: " + parser.getSigningCertificate().getSubject().toString());
-            System.out.println("Payload Cert: " + parser.getPayload().length + " Bytes");
+            CertificateUtils certificateUtils = new CertificateUtils();
+
+            System.out.println("Signer Cert:");
+            System.out.println("  Subject: " + parser.getSigningCertificate().getSubject().toString());
+            System.out.println("  Issuer: " + parser.getSigningCertificate().getIssuer().toString());
+            System.out.println("  Thumbprint: " + certificateUtils.getCertThumbprint(parser.getSigningCertificate()));
+
+            if (signingCertFile != null) {
+                X509CertificateHolder signingCert =
+                        certificateUtils.convertCertificate(readCertFromFile(signingCertFile));
+                System.out.println("  Matches Given Certificate: "
+                        + (signingCert.equals(parser.getSigningCertificate()) ? "yes" : "no"));
+            }
+
+            System.out.println("Payload: " + parser.getPayload().length + " Bytes");
         }
 
         return 0;
