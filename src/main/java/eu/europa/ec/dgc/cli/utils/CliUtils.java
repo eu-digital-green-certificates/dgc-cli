@@ -22,16 +22,19 @@ package eu.europa.ec.dgc.cli.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.Base64;
+import org.apache.commons.io.FileUtils;
 import org.bouncycastle.jcajce.provider.asymmetric.x509.CertificateFactory;
-import org.bouncycastle.openssl.PEMParser;
-import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 
 public class CliUtils {
 
@@ -42,14 +45,32 @@ public class CliUtils {
      * @return Private Key
      * @throws IOException if reading failed.
      */
-    public static PrivateKey readKeyFromFile(File inputFile) throws IOException {
-        FileReader fileReader = new FileReader(inputFile);
-        PEMParser pemParser = new PEMParser(fileReader);
+    public static PrivateKey readKeyFromFile(File inputFile)
+            throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+        String pem = FileUtils.readFileToString(inputFile, StandardCharsets.UTF_8);
+        int beginPrivateKey = pem.indexOf("-----BEGIN PRIVATE KEY-----");
+        int endPrivateKey = pem.indexOf("-----END PRIVATE KEY-----");
 
-        JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
-        PrivateKeyInfo privateKeyInfo = PrivateKeyInfo.getInstance(pemParser.readObject());
+        if (beginPrivateKey == -1 || endPrivateKey == -1) {
+            System.err.println("Could not find PKCS#8 Private Key");
+            return null;
+        }
 
-        return converter.getPrivateKey(privateKeyInfo);
+
+        String privateKeyBase64 = pem
+                .substring(beginPrivateKey + 27, endPrivateKey - 1)
+                .replaceAll("[\n\r ]", "");
+        byte[] keyBytes = Base64.getDecoder().decode(privateKeyBase64);
+
+        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
+        KeyFactory ecKeyFactory = KeyFactory.getInstance("ECDSA");
+
+        try {
+            return ecKeyFactory.generatePrivate(spec);
+        } catch (InvalidKeySpecException e) {
+            KeyFactory rsaKeyFactory = KeyFactory.getInstance("RSA");
+            return rsaKeyFactory.generatePrivate(spec);
+        }
     }
 
     /**
