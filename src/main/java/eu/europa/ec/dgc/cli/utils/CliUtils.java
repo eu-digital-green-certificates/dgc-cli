@@ -45,7 +45,8 @@ public class CliUtils {
      * @return Private Key
      * @throws IOException if reading failed.
      */
-    public static PrivateKey readKeyFromFile(File inputFile) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+    public static PrivateKey readKeyFromFile(File inputFile)
+            throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         String pem = FileUtils.readFileToString(inputFile, StandardCharsets.UTF_8);
         int beginPrivateKey = pem.indexOf("-----BEGIN PRIVATE KEY-----");
         int endPrivateKey = pem.indexOf("-----END PRIVATE KEY-----");
